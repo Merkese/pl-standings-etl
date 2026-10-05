@@ -1,0 +1,5 @@
+.env
+.venv/
+main.py
+test.ipynb
+README.md
