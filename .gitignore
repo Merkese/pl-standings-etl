@@ -2,4 +2,5 @@
 .venv/
 main.py
 test.ipynb
-README.md
+src/
+mds/
