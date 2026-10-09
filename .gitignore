@@ -1,6 +1,4 @@
 .env
 .venv/
 main.py
-test.ipynb
-src/
 mds/
