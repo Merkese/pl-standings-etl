@@ -26,7 +26,7 @@ def get_standings(LEAGUE_ID = 47):
     response = requests.get(
         API_URL,
         headers=headers, 
-        # (league) parameter 
+        # league parameter 
         params=querystring)
 
     payload = response.json()
