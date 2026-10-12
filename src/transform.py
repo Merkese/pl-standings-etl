@@ -4,15 +4,18 @@ import pandas as pd
 
 
 def standings_trfm():
-    """ Uses get_standings() to transform into a pandas dataFrame"""
-
+    """ 
+    Uses get_standings() to transform response data into a pandas dataFrame
+    """
+    # api response
     response = get_standings()
 
     rows = []
-    
+
+    # Used for gathering specific columns/attributes from response data 
     column_names = ['season','position','team_id','team','played', 'won', 'draw', 'lost', 'score_streak', 'goal_diff', 'points']
 
-
+    # iterates over response data and adds each row to a tuple 
     for club in response:
         season          = 2025
         position        = club["idx"]
@@ -30,5 +33,6 @@ def standings_trfm():
         
         rows.append(tuple_of_club)
 
-        teamData = pd.DataFrame(rows, columns=column_names)
+    # Creates standings DataFrame
+    teamData = pd.DataFrame(rows, columns=column_names)
     return teamData

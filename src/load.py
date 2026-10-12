@@ -3,7 +3,9 @@ import psycopg as pg
 from dotenv import load_dotenv
 
 def load_standings(standings_df): 
-    """ Loads standings data into standings table via Postgre. This assumes you have created the suggested schema and table as named within the function """
+    """ 
+    Loads standings data into standings table via Postgre. This assumes you have created the suggested schema and table as named within the function 
+    """
     load_dotenv()
 
     # Grabs credentials from env
@@ -44,7 +46,7 @@ def load_standings(standings_df):
 
     num_of_updated_rows = len(list_standings_tuple)
 
-    # Connects to database and initialize cursor
+    # Connects to database and initialize cursor, will rollback on 
     with pg.connect( 
             dbname= PGDB,
             user= PGUSER,
@@ -69,9 +71,7 @@ def load_standings(standings_df):
         if not table_check:
             raise ValueError(f"The table staging.standings was not found")
         
-        # Commits upsert query
-        
+        # Executes upsert query (will automatically commit on exit and rollback on error)
         cursor.executemany(UPSERT_SQL, list_standings_tuple)
-        conn.commit()
         return f"Upsert completed - {num_of_updated_rows} updated. "
 
