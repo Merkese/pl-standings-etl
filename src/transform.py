@@ -1,7 +1,23 @@
-from extract import get_standings
+from src.extract import get_standings, league_details
 import pandas as pd
 
 
+def get_latestSeason():
+    """
+    Returns the latest season start year from API response
+
+    """
+    response = league_details()
+
+    season = response["latestSeason"]
+    
+    season.split("/")
+    
+    season = int(season[0:4]) 
+
+    return season
+
+LATEST_SEASON = get_latestSeason()
 
 def standings_trfm():
     """ 
@@ -17,7 +33,7 @@ def standings_trfm():
 
     # iterates over response data and adds each row to a tuple 
     for club in response:
-        season          = 2025
+        season          = LATEST_SEASON
         position        = club["idx"]
         team_id         = club["id"]
         team            = club["name"]
@@ -36,3 +52,4 @@ def standings_trfm():
     # Creates standings DataFrame
     teamData = pd.DataFrame(rows, columns=column_names)
     return teamData
+

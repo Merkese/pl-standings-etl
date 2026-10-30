@@ -73,5 +73,5 @@ def load_standings(standings_df):
         
         # Executes upsert query (will automatically commit on exit and rollback on error)
         cursor.executemany(UPSERT_SQL, list_standings_tuple)
-        return f"Upsert completed - {num_of_updated_rows} updated. "
+        return f"Upsert completed - {num_of_updated_rows} added. "
 
