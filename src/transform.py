@@ -17,7 +17,7 @@ def get_latestSeason():
 
     return season
 
-LATEST_SEASON = get_latestSeason()
+
 
 def standings_trfm():
     """ 
@@ -26,6 +26,8 @@ def standings_trfm():
     # api response
     response = get_standings()
 
+    # gets latest season
+    season = get_latestSeason()
     rows = []
 
     # Used for gathering specific columns/attributes from response data 
@@ -33,7 +35,7 @@ def standings_trfm():
 
     # iterates over response data and adds each row to a tuple 
     for club in response:
-        season          = LATEST_SEASON
+        season          = season
         position        = club["idx"]
         team_id         = club["id"]
         team            = club["name"]
@@ -52,4 +54,3 @@ def standings_trfm():
     # Creates standings DataFrame
     teamData = pd.DataFrame(rows, columns=column_names)
     return teamData
-
