@@ -69,9 +69,9 @@ def load_standings(standings_df):
             )
         table_check = cursor.fetchone()[0]
         if not table_check:
-            raise ValueError(f"The table staging.standings was not found")
+            raise ValueError("The table staging.standings was not found")
         
         # Executes upsert query (will automatically commit on exit and rollback on error)
         cursor.executemany(UPSERT_SQL, list_standings_tuple)
-        return f"Upsert completed - {num_of_updated_rows} added. "
+        return f"Upsert completed - {num_of_updated_rows} upserted. "
 

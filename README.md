@@ -1,8 +1,8 @@
 # PL Standings ETL
 
-This repository is a personal-use project. It is a reusable ETL pipeline for collecting Premier League standings data from an external API and loading it into PostgreSQL for analysis.
+This repository is a personal-use project. It is a reusable ETL pipeline for collecting Premier League standings data from an external API and loading it into PostgreSQL.
 
-The project is designed around a repeatable data workflow rather than ad hoc personal tracking. It expects production-style inputs and environment configuration, and it is intended to support downstream analytics.
+The project is designed around a repeatable data workflow
 
 ## Overview
 
@@ -13,6 +13,12 @@ The pipeline follows a standard ETL flow:
 - Load: upsert records into PostgreSQL
 
 The main orchestration happens in `main.py`, with each stage implemented in the `src/` package.
+
+## What Each Step Does
+
+- `src/extract.py`: Makes two API calls for the Premier League (`leagueid=47`). One gets the standings, the other gets league details (used to find the current season).
+- `src/transform.py`: Gets the latest season, renames the API fields, and builds a DataFrame with these columns: `season`, `position`, `team_id`, `team`, `played`, `won`, `draw`, `lost`, `score_streak`, `goal_diff`, `points`.
+- `src/load.py`: Checks that `staging.standings` exists (it raises an error if not and does not create it), then upserts the rows. If a `(season, team_id)` row already exists it is updated, otherwise it is inserted. If anything fails, the changes are rolled back.
 
 ## Current Project Structure
 
@@ -48,9 +54,21 @@ pip install -r requirements.txt
 ```
 
 Notes:
-- The app expects PostgreSQL access to a database that already has the `staging.standings` table.
-- The load step uses an upsert pattern keyed on `(season, team_id)`.
-- API values are loaded from the environment rather than hardcoded into the code.
+    - The app expects PostgreSQL access to a database that already has the `staging.standings` table.
+    - The load step uses an upsert pattern keyed on `(season, team_id)`.
+    - API values are loaded from the environment rather than hardcoded into the code.
+    - For latest season `2025/2026` simply becomes `2025`.
+
+## Environment Variables
+
+Place inside a `.env` file in the project root:
+
+- API: `API_KEY`, `API_HOST`, `API_URL` (standings), `API_URL2` (league details)
+- PostgreSQL: `host`, `port`, `username`, `pass`, `dbname`
+
+## Notebooks
+
+- `notebooks/standings-etl.ipynb`: exploratory work for building the ETL.
 
 ## Running the ETL
 
@@ -64,4 +82,5 @@ This runs the transformation step and loads the data into the configured Postgre
 
 ## Current Status
 
-The ETL pipeline is active, with the current focus on stable extraction, transformation, and PostgreSQL loading for analytics use.
+The ETL pipeline is active, with the current focus on stable extraction, transformation, and PostgreSQL loading for analytics use. Additionally, next steps include logging, automated batch loading, and multi-pipeline orchestration. 
+
