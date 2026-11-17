@@ -1,4 +1,4 @@
-# PL Standings ETL
+# Premier League Standings ETL
 
 This repository is a personal-use project. It is a reusable ETL pipeline for collecting Premier League standings data from an external API and loading it into PostgreSQL.
 
@@ -14,9 +14,13 @@ The pipeline follows a standard ETL flow:
 
 The main orchestration happens in `main.py`, with each stage implemented in the `src/` package.
 
+Notes:
+- The app expects PostgreSQL access to a database that already has the `staging.standings` table.
+- The load step uses an upsert pattern keyed on `(season, team_id)`.
+
 ## What Each Step Does
 
-- `src/extract.py`: Makes two API calls for the Premier League (`leagueid=47`). One gets the standings, the other gets league details (used to find the current season).
+- `src/extract.py`: Makes two API calls for the Premier League (`leagueid=47`). One gets the standings, the other gets league details.
 - `src/transform.py`: Gets the latest season, renames the API fields, and builds a DataFrame with these columns: `season`, `position`, `team_id`, `team`, `played`, `won`, `draw`, `lost`, `score_streak`, `goal_diff`, `points`.
 - `src/load.py`: Checks that `staging.standings` exists (it raises an error if not and does not create it), then upserts the rows. If a `(season, team_id)` row already exists it is updated, otherwise it is inserted. If anything fails, the changes are rolled back.
 
@@ -52,12 +56,6 @@ Install dependencies with:
 ```bash
 pip install -r requirements.txt
 ```
-
-Notes:
-    - The app expects PostgreSQL access to a database that already has the `staging.standings` table.
-    - The load step uses an upsert pattern keyed on `(season, team_id)`.
-    - API values are loaded from the environment rather than hardcoded into the code.
-    - For latest season `2025/2026` simply becomes `2025`.
 
 ## Environment Variables
 
