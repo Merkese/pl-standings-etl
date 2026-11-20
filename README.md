@@ -1,6 +1,6 @@
 # Premier League Standings ETL
 
-This repository is a personal-use project. It is a reusable ETL pipeline for collecting Premier League standings data from an external API and loading it into PostgreSQL.
+This repository is a personal project, however, it is designed to be a reusable ETL pipeline for collecting Premier League standings data from an external API and loading it into PostgreSQL.
 
 The project is designed around a repeatable data workflow
 
@@ -14,9 +14,10 @@ The pipeline follows a standard ETL flow:
 
 The main orchestration happens in `main.py`, with each stage implemented in the `src/` package.
 
-Notes:
-- The app expects PostgreSQL access to a database that already has the `staging.standings` table.
+### Notes:
+- The script expects PostgreSQL access to a database that already has the `staging.standings` table.
 - The load step uses an upsert pattern keyed on `(season, team_id)`.
+- Copy `.env.example` to `.env` and fill in your API key and PostgreSQL credentials before running.
 
 ## What Each Step Does
 
@@ -31,6 +32,7 @@ Notes:
 ├── main.py
 ├── requirements.txt
 ├── .env
+├── .env.example
 ├── src/
 │   ├── extract.py
 │   ├── transform.py
@@ -80,5 +82,5 @@ This runs the transformation step and loads the data into the configured Postgre
 
 ## Current Status
 
-The ETL pipeline is active, with the current focus on stable extraction, transformation, and PostgreSQL loading for analytics use. Additionally, next steps include logging, automated batch loading, and multi-pipeline orchestration. 
+The ETL pipeline is active, with the current focus on stable extraction, transformation, and PostgreSQL loading for analytics use. Additionally, my next steps will include logging and automated batch loading, among other features. 
 
